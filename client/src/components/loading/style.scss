@@ -1,0 +1,238 @@
+@import '../../index.scss';
+
+/* ===============================
+   FULL PAGE LOADING ROOT
+================================ */
+
+#Loading-FullPage {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+
+  background:
+    radial-gradient(circle at top, rgba(182,255,77,.12), transparent 45%),
+    radial-gradient(circle at bottom, rgba(182,255,77,.08), transparent 45%),
+    linear-gradient(180deg, #030405, #0b0d10);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ===============================
+   BACKGROUND FLOATING GLOW
+================================ */
+
+#Loading-FullPage::before,
+#Loading-FullPage::after {
+  content: "";
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+  filter: blur(80px);
+  animation: floatGlow 10s infinite alternate ease-in-out;
+}
+
+#Loading-FullPage::before {
+  top: -100px;
+  left: -100px;
+}
+
+#Loading-FullPage::after {
+  bottom: -120px;
+  right: -120px;
+  animation-delay: 3s;
+}
+
+@keyframes floatGlow {
+  from { transform: translateY(0px); }
+  to   { transform: translateY(60px); }
+}
+
+/* ===============================
+   MAIN WRAPPER
+================================ */
+
+.loading-wrapper {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+/* ===============================
+   LOGO / BRAND
+================================ */
+
+.loading-logo {
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.loading-logo span {
+  color: var(--accent);
+  text-shadow: 0 0 25px rgba(182,255,77,.5);
+}
+
+/* ===============================
+   RING ANIMATION (CORE)
+================================ */
+
+.loading-ring {
+  position: relative;
+  width: 110px;
+  height: 110px;
+}
+
+.loading-ring::before,
+.loading-ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid transparent;
+}
+
+.loading-ring::before {
+  border-top: 3px solid var(--accent);
+  animation: spin 1.2s linear infinite;
+}
+
+.loading-ring::after {
+  inset: 10px;
+  border-bottom: 3px solid rgba(182,255,77,.5);
+  animation: spinReverse 1.8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes spinReverse {
+  from { transform: rotate(360deg); }
+  to   { transform: rotate(0deg); }
+}
+
+/* ===============================
+   INNER PULSE DOT
+================================ */
+
+.loading-dot {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 25px rgba(182,255,77,.8);
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%   { transform: scale(1); opacity: 1; }
+  50%  { transform: scale(1.5); opacity: .5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ===============================
+   PROGRESS BAR
+================================ */
+
+.loading-bar {
+  width: 240px;
+  height: 4px;
+  background: rgba(255,255,255,.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.loading-bar::after {
+  content: "";
+  display: block;
+  width: 35%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent),
+    transparent
+  );
+  animation: progressSlide 1.3s infinite ease-in-out;
+}
+
+@keyframes progressSlide {
+  from { transform: translateX(-120%); }
+  to   { transform: translateX(300%); }
+}
+
+/* ===============================
+   LOADING TEXT
+================================ */
+
+.loading-text {
+  font-size: 0.75rem;
+  letter-spacing: .35em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+/* ===============================
+   WAVE DOTS
+================================ */
+
+.loading-dots {
+  display: flex;
+  gap: .4rem;
+}
+
+.loading-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: .3;
+  animation: wave 1.4s infinite;
+}
+
+.loading-dots span:nth-child(2) { animation-delay: .2s; }
+.loading-dots span:nth-child(3) { animation-delay: .4s; }
+
+@keyframes wave {
+  0%   { opacity: .3; transform: translateY(0); }
+  50%  { opacity: 1;  transform: translateY(-6px); }
+  100% { opacity: .3; transform: translateY(0); }
+}
+
+/* ===============================
+   SUBTEXT
+================================ */
+
+.loading-sub {
+  font-size: .65rem;
+  color: var(--text-secondary);
+  opacity: .7;
+}
+
+/* ===============================
+   FADE OUT (OPTIONAL)
+================================ */
+
+#Loading-FullPage.hide {
+  animation: fadeOut .6s ease forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}

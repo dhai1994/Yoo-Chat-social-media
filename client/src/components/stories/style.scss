@@ -1,0 +1,324 @@
+@import '../../index.scss';
+
+.stories {
+    .stories-user {
+        padding-top: 1.5rem;
+        padding-bottom: .5rem;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: calc(100% - 2rem);
+        overflow: hidden;
+
+        .items {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            scrollbar-color: transparent transparent;
+            scrollbar-width: 0px;
+            display: grid;
+            gap: .7rem;
+            grid-template-columns: repeat(auto-fill, minmax(calc(100%/4), 1fr));
+
+            @media screen and (max-width:930px) {
+                grid-template-columns: repeat(auto-fill, minmax(calc(100% / 3), 1fr));
+            }
+
+            @media screen and (max-width:330px) {
+                grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+            }
+
+            &::-webkit-scrollbar {
+                width: 0px;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: transparent;
+            }
+
+            .card {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                border-radius: 10px;
+                cursor: pointer;
+                max-height: 26rem;
+
+                .thumb {
+                    width: 100%;
+                    height: 100%;
+                    object-position: center;
+                    object-fit: cover;
+                    border-radius: 10px;
+                }
+
+                .user {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: .5rem;
+                    position: absolute;
+                    left: .5rem;
+                    bottom: 1rem;
+
+                    img,
+                    svg {
+                        max-width: 2.5rem;
+                        max-height: 2.5rem;
+                        border: 2px solid $bg-violet;
+                        @include coverImg;
+
+                        @media screen and (max-width:500px) {
+                            max-width: 2rem;
+                            max-height: 2rem;
+                        }
+                    }
+
+                    svg {
+                        padding: .1rem;
+                        fill: $bg-violet;
+                    }
+
+                    .user-name {
+                        font-size: small;
+                        font-weight: bold;
+                        color: #ffff;
+                    }
+                }
+
+                .actions {
+                    opacity: 0;
+                    position: absolute;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 10px;
+                    background: transparent;
+                    backdrop-filter: blur(2px);
+                    transition: all .5s ease-in-out;
+                    -moz-transition: all .5s ease-in-out;
+
+                    button {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border: 2px solid #ffff;
+                        padding: .5rem;
+                        border-radius: 9999px;
+                        background: transparent;
+                        transition: all .3s ease-in-out;
+                        -moz-transition: all .3s ease-in-out;
+                        cursor: pointer;
+
+                        .svg_path_fill path {
+                            transition: all .3s ease-in-out;
+                            -moz-transition: all .3s ease-in-out;
+                            fill: #ffff;
+
+                        }
+
+                        &:hover {
+                            border-color: $bg-violet;
+
+                            .svg_path_fill path {
+                                fill: $bg-violet;
+                            }
+                        }
+                    }
+
+                    .trash {
+                        transition: all .3s ease-in-out;
+                        -moz-transition: all .3s ease-in-out;
+                        position: absolute;
+                        bottom: .5rem;
+                        right: .5rem;
+
+                        svg {
+                            fill: #ffff;
+                            transition: all .3s ease-in-out;
+                            -moz-transition: all .3s ease-in-out;
+                        }
+
+                        &:hover {
+                            svg {
+                                fill: $bg-violet;
+                            }
+                        }
+                    }
+                }
+
+                &:hover {
+                    .actions {
+                        opacity: 1;
+                    }
+                }
+            }
+
+            .card-add {
+                width: auto;
+                height: auto;
+                border: 2px solid var(--bg-grey);
+                border-radius: 10px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                max-height: 25rem;
+                text-align: center;
+                padding: .5rem;
+
+                button {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 3rem;
+                    height: 3rem;
+                    background: transparent;
+                    border: 3px dashed var(--bg-grey);
+                    border-radius: 9999px;
+                    cursor: pointer;
+                    transition: all .3s ease-in-out;
+                    -moz-transition: all .3s ease-in-out;
+
+                    .svg_path_fill {
+                        width: 1rem;
+                        height: 1rem;
+
+                        path {
+                            transition: all .3s ease-in-out;
+                            -moz-transition: all .3s ease-in-out;
+                            fill: var(--text-primary);
+                        }
+                    }
+
+                    &:hover {
+                        border-color: $bg-violet;
+
+                        .svg_path_fill path {
+                            fill: $bg-violet;
+                        }
+                    }
+                }
+
+                p {
+                    margin-top: .5rem;
+                    color: var(--text-primary);
+                    font-size: small;
+                    font-weight: normal;
+                }
+            }
+        }
+
+        button[data-for="load_more"] {
+            width: 7rem;
+            height: 2.3rem;
+            border-radius: .5rem;
+            font-size: small;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            background: $bg-violet;
+            border: 2px solid $bg-violet;
+            margin: 0 auto;
+            margin-bottom: .5rem;
+            transition: all .5s ease-in-out;
+            -moz-transition: all .5s ease-in-out;
+
+            &:hover {
+                background: transparent;
+                color: var(--text-primary)
+            }
+        }
+    }
+
+    section[data-for="modal_outer"] {
+        @include specialModal;
+
+        .inner_modal {
+            margin: 1.5rem;
+            width: auto;
+
+            .video {
+                width: 100%;
+                display: none;
+
+                video {
+                    cursor: pointer;
+                    height: auto;
+                    max-height: 65vh;
+                }
+
+                input[type="range"] {
+                    position: relative;
+                    width: 100%;
+                    height: .3rem;
+                    -webkit-appearance: none;
+                    appearance: none;
+                    background: linear-gradient(to right, $bg-violet 0%, $bg-violet 0%, $Text-Secondary 0%, $Text-Secondary 100%);
+                    border-radius: 999px;
+                    transition: all .5s ease-in-out;
+                    -moz-transition: all .5s ease-in-out;
+
+                    &::-webkit-slider-thumb {
+                        -webkit-appearance: none;
+                        appearance: none;
+                        height: .5rem;
+                        width: .5rem;
+                        border-radius: 999px;
+                        background: var(--text-primary);
+                        border: none;
+                    }
+
+                    &::-moz-range-thumb {
+                        appearance: none;
+                        height: .5rem;
+                        width: .5rem;
+                        border-radius: 999px;
+                        background: var(--text-primary);
+                        border: none;
+                    }
+
+                    &:is(.non_active) {
+                        &::-webkit-slider-thumb {
+                            visibility: hidden;
+                        }
+
+                        &::-moz-range-thumb {
+                            visibility: hidden;
+                        }
+                    }
+                }
+            }
+
+            form {
+                width: 350px;
+
+                @media screen and (max-width: 350px) {
+                    width: 100%;
+                }
+            }
+
+            &:is(.active-full) {
+                .video {
+                    display: block;
+                }
+
+                form {
+                    width: 100%;
+                }
+            }
+        }
+
+    }
+}

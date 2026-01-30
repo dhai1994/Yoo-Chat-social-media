@@ -1,0 +1,214 @@
+@import "../../index.scss";
+
+/* ==============================
+   GLOBAL MENU (DARK BLUE THEME)
+================================ */
+
+.menu-global {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4.5rem;
+  height: 100%;
+  z-index: 1000;
+
+  /* 🔥 Dark premium background */
+  background: linear-gradient(
+    180deg,
+    #070b14,
+    #0b1020,
+    #070b14
+  );
+
+  box-shadow:
+    2px 0 20px rgba(0, 0, 0, 0.6),
+    inset -1px 0 0 rgba(255, 255, 255, 0.03);
+
+  transition: all 0.3s ease-in-out;
+
+  .main {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    /* =========================
+       LOGO / TITLE
+    ========================== */
+    h1 {
+      margin-top: 1.4rem;
+      margin-bottom: 2.5rem;
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #4da3ff;
+      transform: rotate(90deg);
+
+      text-shadow:
+        0 0 12px rgba(77, 163, 255, 0.35);
+    }
+
+    /* =========================
+       MENU BUTTONS
+    ========================== */
+    button {
+      position: relative;
+      margin: 0.9rem 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      outline: none;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+
+      transition: all 0.25s ease;
+
+      /* subtle hover bg */
+      &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 14px;
+        background: radial-gradient(
+          circle,
+          rgba(77, 163, 255, 0.12),
+          transparent 70%
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      /* ICON COLORS (default) */
+      .path_svg_fill path {
+        fill: #6b7280;
+        transition: all 0.25s ease;
+      }
+
+      .svg_fill {
+        fill: #6b7280;
+        transition: all 0.25s ease;
+      }
+
+      .path_svg_stroke path {
+        stroke: #6b7280;
+        transition: all 0.25s ease;
+      }
+
+      /* =========================
+         HOVER EFFECT
+      ========================== */
+      &:hover {
+        transform: translateY(-2px);
+
+        &::before {
+          opacity: 1;
+        }
+
+        .path_svg_fill path,
+        .svg_fill {
+          fill: #4da3ff;
+        }
+
+        .path_svg_stroke path {
+          stroke: #4da3ff;
+        }
+      }
+
+      /* =========================
+         ACTIVE STATE
+      ========================== */
+      &.active {
+        background: linear-gradient(
+          135deg,
+          rgba(77, 163, 255, 0.25),
+          rgba(77, 163, 255, 0.08)
+        );
+
+        box-shadow:
+          0 0 0 1px rgba(77, 163, 255, 0.35),
+          0 0 20px rgba(77, 163, 255, 0.35);
+
+        .path_svg_fill path,
+        .svg_fill {
+          fill: #ffffff;
+        }
+
+        .path_svg_stroke path {
+          stroke: #ffffff;
+        }
+      }
+
+      /* =========================
+         LOGOUT BUTTON
+      ========================== */
+      &.logout {
+        margin-top: auto;
+        margin-bottom: 1.2rem;
+
+        &:hover {
+          background: rgba(255, 80, 80, 0.12);
+
+          .path_svg_fill path,
+          .svg_fill {
+            fill: #ff4d4d;
+          }
+
+          .path_svg_stroke path {
+            stroke: #ff4d4d;
+          }
+        }
+      }
+    }
+  }
+
+  /* ==============================
+     MOBILE / SMALL DEVICES
+  =============================== */
+  @media screen and (max-width: 680px) {
+    top: auto;
+    bottom: 0.6rem;
+    left: 0.5rem;
+    right: 0.5rem;
+
+    width: auto;
+    height: 3.6rem;
+    border-radius: 18px;
+
+    background: linear-gradient(
+      90deg,
+      #070b14,
+      #0b1020,
+      #070b14
+    );
+
+    box-shadow:
+      0 -5px 30px rgba(0, 0, 0, 0.6),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+
+    .main {
+      flex-direction: row;
+
+      h1 {
+        display: none;
+      }
+
+      button {
+        margin: auto;
+        width: 42px;
+        height: 42px;
+      }
+
+      .logout {
+        display: none;
+      }
+    }
+  }
+}
