@@ -5,21 +5,28 @@ import cookieParser from "cookie-parser";
 import http from "http";
 import path from "path";
 import { Server } from "socket.io";
-
 // routes
 import userRoute from "./routes/user.js";
 import socketRoute from "./routes/socket.js";
-
 import { connectDB } from "./db/config.js";
 
 dotenv.config(); // env config
-
 const port = process.env.PORT || 5000;
-
 const app = express();
 
+const allowedOrigins = [
+  "http://localhost:5000",
+  "https://yoo-chat-social-media.vercel.app",
+];
+
 const corsConfig = {
-  origin: "*",
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
 };
 
@@ -27,13 +34,10 @@ const wrapSocketIo = (middleware) => (socket, next) =>
   middleware(socket.request, {}, next);
 
 app.use(express.json({ limit: "50mb" }));
-
 app.use(cors(corsConfig));
-
 app.use(cookieParser());
 
 const server = http.createServer(app);
-
 const io = new Server(server, {
   cors: corsConfig,
 });
@@ -41,9 +45,7 @@ const io = new Server(server, {
 io.use(wrapSocketIo(cookieParser()));
 
 app.use(express.static("dist"));
-
 app.use("/files", express.static("files"));
-
 app.use("/api/user", userRoute);
 
 app.get("/api", (req, res) => {
@@ -61,6 +63,5 @@ server.listen(port, () => {
     if (done) console.log("DB Connected");
     else console.log(`DB Connect Failed : ${err}`);
   });
-
   console.log(`Server Started Port : ${port}`);
 });
