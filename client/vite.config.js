@@ -13,19 +13,19 @@ export default ({ mode }) => {
       host: true,
       proxy: {
         "/api": {
-          target: `${env.BACK_END}/api`,
+          target: `${env.VITE_BACK_END}/api`,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ""),
         },
 
         "/files": {
-          target: `${env.BACK_END}/files`,
+          target: `${env.VITE_BACK_END}/files`,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/files/, ""),
         },
 
         "/socket.io": {
-          target: `ws://${env.BACK_END.replace(/^https?:\/\//, "")}`,
+          target: `ws://${env.VITE_BACK_END.replace(/^https?:\/\//, "")}`,
           ws: true,
         },
       },
