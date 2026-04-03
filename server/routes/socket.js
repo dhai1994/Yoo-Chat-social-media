@@ -7,30 +7,23 @@ import { RouteGroup, SocketGroup } from "./group/index.js";
 import RouteStories from './stories.js'
 
 export default (app, io) => {
-
   io.use((socket, next) => {
     const { token = null } = socket?.request?.cookies;
-
-    if (!token) {
-      let error = new Error("user not logged");
-      error.data = { status: 405, message: "user not logged" };
-      return next(error);
-    }
 
     jwt.verify(token, process.env.JWT_SECRET, async (err, decode) => {
       if (decode?._id?.length === 24) {
         try {
           let userData = await user.get_user(decode?._id);
           if (userData) {
-            socket.userData = userData; // attach user to socket
             next();
-          } else {
-            let error = new Error("user not logged");
-            error.data = { status: 405, message: "user not found" };
-            next(error);
           }
         } catch (err) {
-          next(); // don't block on DB error
+          let error = new Error("user not logged");
+          error.data = {
+            status: 405,
+            message: err ? err : "user not logged",
+          };
+          next(error);
         }
       } else {
         let error = new Error("user not logged");
@@ -44,22 +37,21 @@ export default (app, io) => {
   });
 
   io.on("connection", (socket) => {
-
     socket.on("user", async (_id) => {
       let previous = await chat?.addSocketId?.(_id, socket.id)?.catch?.(() => { });
-      let groups = await group?.get_user_group_ids?.(_id)?.catch?.(() => { });
+      let groups = await group?.get_user_group_ids?.(_id)?.catch?.(() => { })
 
       if (previous?.socketId) {
-        io.to(previous?.socketId).emit("close_window", socket.id);
+        io.to(previous?.socketId).emit("close_window", socket.id)
       }
 
       if (groups?.[0]) {
-        socket.join(groups);
+        socket.join(groups)
       }
 
       io.emit("all user status", {
         _id: previous?._id?.toString?.()
-      });
+      })
     });
 
     SocketPrivate(socket, io);
@@ -71,11 +63,11 @@ export default (app, io) => {
       io.emit("all user status", {
         _id: previous?._id?.toString?.(),
         offline: true
-      });
+      })
     });
   });
 
-  RoutePrivate(app, io);
-  RouteGroup(app, io);
-  RouteStories(app, io);
+  RoutePrivate(app, io)
+  RouteGroup(app, io)
+  RouteStories(app, io)
 };
