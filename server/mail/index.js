@@ -9,6 +9,9 @@ let transporter = nodemailer.createTransport({
     user: process.env.MAIL_EMAIL,
     pass: process.env.MAIL_SECRET,
   },
+  connectionTimeout: 10000,  // add this
+  greetingTimeout: 10000,    // add this
+  socketTimeout: 10000,
 });
 
 export const sendMail = (details) => {
