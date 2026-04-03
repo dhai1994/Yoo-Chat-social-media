@@ -46,13 +46,7 @@ app.use(cookieParser());
 
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: allowedOrigins,
-    credentials: true,
-    methods: ["GET", "POST"],
-  },
-  transports: ["websocket", "polling"],
-  allowEIO3: true,
+  cors: corsConfig,
 });
 
 io.use(wrapSocketIo(cookieParser()));
