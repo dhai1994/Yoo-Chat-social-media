@@ -47,6 +47,7 @@ app.use(cookieParser());
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: corsConfig,
+   cookie: true,
 });
 
 io.use(wrapSocketIo(cookieParser()));
