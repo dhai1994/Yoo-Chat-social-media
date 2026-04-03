@@ -16,7 +16,9 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:5000",
+  "http://localhost:5173",
   "https://yoo-chat-social-media.vercel.app",
+  "https://yoo-chat-social-media-f0dcpo8fo.vercel.app",
 ];
 
 const corsConfig = {
@@ -28,7 +30,12 @@ const corsConfig = {
     }
   },
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
 };
+
+// Add this line too!
+app.options("*", cors(corsConfig));
 
 const wrapSocketIo = (middleware) => (socket, next) =>
   middleware(socket.request, {}, next);
