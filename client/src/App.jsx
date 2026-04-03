@@ -1,43 +1,68 @@
-import React, { Fragment } from "react";
-import { Route, Routes } from "react-router-dom";
-import { Account, Chats, Groups, Stories } from "./pages";
-import { Loading } from "./components";
-import { Login, Offline, SignUp } from "./features";
-import { useSelector } from "react-redux";
-import ProtectedRoute from "./utils/ProtectedRoute";
-import FourNotFour from "./pages/404";
-import "./App.scss";
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+import http from "http";
+import { Server } from "socket.io";
+import userRoute from "./routes/user.js";
+import socketRoute from "./routes/socket.js";
+import { connectDB } from "./db/config.js";
 
-function App() {
-  const loading = useSelector((state) => state?.additional?.loading);
+dotenv.config();
+const port = process.env.PORT || 5000;
+const app = express();
 
-  return (
-    <Fragment>
-      <Offline />
+const allowedOrigins = [
+  "http://localhost:5000",
+  "http://localhost:5173",
+  "https://yoo-chat-social-media.vercel.app",
+  "https://yoo-chat-social-media-f0dcpo8fo.vercel.app",
+];
 
-      {loading && <Loading />}
+// PUT THIS FIRST
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Cookie");
+  if (req.method === "OPTIONS") return res.sendStatus(200);
+  next();
+});
 
-      <Routes>
-        <Route element={<ProtectedRoute isAuth />}>
-          <Route path="/" exact element={<Chats />} />
-          <Route path="/chat/:id" element={<Chats />} />
-          <Route path="/groups" element={<Groups />} />
-          <Route path="/groups/:id" element={<Groups />} />
-          
-          <Route path="/stories" element={<Stories />} />
-          <Route path="/stories/:id" element={<Stories />} />
-          <Route path="/account" element={<Account />} />
-        </Route>
+const corsConfig = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
+};
 
-        <Route element={<ProtectedRoute />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-        </Route>
+app.options("*", cors(corsConfig));
+app.use(express.json({ limit: "50mb" }));
+app.use(cors(corsConfig));
+app.use(cookieParser());
 
-        <Route path="*" element={<FourNotFour />} />
-      </Routes>
-    </Fragment>
-  );
-}
+const server = http.createServer(app);
+const io = new Server(server, { cors: corsConfig });
+io.use((socket, next) => cookieParser()(socket.request, {}, next));
 
-export default App;
+app.use("/files", express.static("files"));
+app.use("/api/user", userRoute);
+app.get("/api", (req, res) => res.send("Api V1"));
+socketRoute(app, io);
+
+server.listen(port, () => {
+  connectDB((done, err) => {
+    if (done) console.log("DB Connected");
+    else console.log(`DB Connect Failed : ${err}`);
+  });
+  console.log(`Server Started Port : ${port}`);
+});
