@@ -37,12 +37,13 @@ const corsConfig = {
 // Add this line too!
 app.options("*", cors(corsConfig));
 
-const wrapSocketIo = (middleware) => (socket, next) =>
-  middleware(socket.request, {}, next);
+io.use((socket, next) => {
+  cookieParser()(socket.request, socket.request.res || {}, next);
+});
 
 app.use(express.json({ limit: "50mb" }));
 app.use(cors(corsConfig));
-app.use(cookieParser());
+
 
 const server = http.createServer(app);
 const io = new Server(server, {
