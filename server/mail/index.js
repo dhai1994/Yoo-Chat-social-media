@@ -1,35 +1,30 @@
 import nodemailer from "nodemailer";
-import dotnev from "dotenv";
-
-dotnev.config();
+import dotenv from "dotenv";
+dotenv.config();
 
 let transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.resend.com",
+  port: 465,
+  secure: true,
   auth: {
-    user: process.env.MAIL_EMAIL,
-    pass: process.env.MAIL_SECRET,
+    user: "resend",        // always literally "resend"
+    pass: process.env.MAIL_SECRET,  
   },
-  connectionTimeout: 10000,  // add this
-  greetingTimeout: 10000,    // add this
-  socketTimeout: 10000,
 });
 
 export const sendMail = (details) => {
-
   return new Promise(async (resolve, reject) => {
     try {
-      let done = await transporter.sendMail(
-        {
-          from: `Soft Chat <${process.env.MAIL_EMAIL}>`,
-          ...details,
-        })
-
-      resolve(done)
+      let done = await transporter.sendMail({
+        from: "YooChat <onboarding@resend.dev>", 
+        ...details,
+      });
+      resolve(done);
     } catch (err) {
       reject({
         status: 500,
-        message: "Email Send Failed"
-      })
+        message: "Email Send Failed",
+      });
     }
-  })
+  });
 };
