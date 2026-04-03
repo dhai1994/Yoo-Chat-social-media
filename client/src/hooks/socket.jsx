@@ -14,7 +14,7 @@ const useSocket = (isCall) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-SocketRef.current = io(import.meta.env.VITE_BACK_END, {
+SocketRef.current = io(import.meta.env.BACK_END, {
   withCredentials: true,
   reconnection: true,
   reconnectionAttempts: 5,
