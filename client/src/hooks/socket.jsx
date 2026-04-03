@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch , useSelector} from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 
@@ -12,13 +12,28 @@ const useSocket = (isCall) => {
   const { id } = useParams();
 
   const navigate = useNavigate();
+    const userId = useSelector((state) => state?.user?._id);
 
   useEffect(() => {
-SocketRef.current = io(import.meta.env.BACK_END, {
+SocketRef.current = io(import.meta.env.VITE_BACK_END, {
   withCredentials: true,
   reconnection: true,
-  reconnectionAttempts: 5,
-  reconnectionDelay: 2000,
+  reconnectionAttempts: Infinity,  // never give up
+  reconnectionDelay: 1000,
+  reconnectionDelayMax: 10000,     // max 10 sec between retries
+  timeout: 20000,
+  transports: ["websocket", "polling"], // fallback to polling if websocket fails
+});
+    SocketRef.current.on("reconnect", (attempt) => {
+  // re-register the user after reconnecting
+  const userId = // get your userId from redux store here
+  if (userId) {
+    SocketRef.current.emit("user", userId);
+  }
+});
+
+SocketRef.current.on("reconnect_attempt", (attempt) => {
+  console.log(`Reconnecting... attempt ${attempt}`);
 });
     SocketRef.current.on("connect_error", (err) => {
   console.error("Socket connection error:", err.message);
