@@ -1,8 +1,5 @@
-
-import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import http from "http";
 import { Server } from "socket.io";
 import userRoute from "./routes/user.js";
 import socketRoute from "./routes/socket.js";
