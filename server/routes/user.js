@@ -33,13 +33,13 @@ const CheckLogged = (req, res, next) => {
       } catch (err) {
         console.log(err);
         if (req?.query?.next) {
-          res.clearCookie("token").status(405).json({
+          res.clearCookie("token", { secure: true, sameSite: "none" }).status(405).json({
             status: 405,
             message: "User Not Logged",
             
           });
         } else {
-          res.clearCookie("token");
+          res.clearCookie("token", { secure: true, sameSite: "none" });
           next();
         }
       }
@@ -47,12 +47,12 @@ const CheckLogged = (req, res, next) => {
       console.log(err ? `Error : ${err?.name}` : "Something Went Wrong");
 
       if (req?.query?.next) {
-        res.clearCookie("token").status(405).json({
+        res.clearCookie("token", { secure: true, sameSite: "none" }).status(405).json({
           status: 405,
           message: "User Not Logged",
         });
       } else {
-        res.clearCookie("token");
+        res.clearCookie("token", { secure: true, sameSite: "none" });
         next();
       }
     }
@@ -270,6 +270,8 @@ router.get("/login-google", CheckLogged, async (req, res) => {
         .status(200)
         .cookie("token", token, {
           httpOnly: true,
+          secure: true,
+  sameSite: "none",
           expires: new Date(Date.now() + 86400000),
         })
         .json({
@@ -360,6 +362,8 @@ router.post("/login-verify", CheckLogged, async (req, res) => {
           .status(200)
           .cookie("token", token, {
             httpOnly: true,
+            secure: true,
+  sameSite: "none",
             expires: new Date(Date.now() + 86400000),
           })
           .json({
@@ -511,7 +515,7 @@ router.put(
 );
 
 router.get("/logout", (req, res) => {
-  res.clearCookie("token").status(200).json({
+  res.clearCookie("token", { secure: true, sameSite: "none" }).status(200).json({
     status: 200,
     message: "Logout",
   });
