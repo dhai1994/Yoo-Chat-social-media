@@ -15,7 +15,9 @@ const useSocket = (isCall) => {
 
   useEffect(() => {
 
-    SocketRef.current = io();
+   SocketRef.current = io(import.meta.env.VITE_BACK_END, {
+  withCredentials: true,
+});
 
     SocketRef?.current?.on("connect_error", (err) => {
       if (err?.data?.status == 405) {
