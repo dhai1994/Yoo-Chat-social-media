@@ -20,6 +20,9 @@ SocketRef.current = io(import.meta.env.VITE_BACK_END, {
   reconnectionAttempts: 5,
   reconnectionDelay: 2000,
 });
+    SocketRef.current.on("connect_error", (err) => {
+  console.error("Socket connection error:", err.message);
+});
 
     SocketRef?.current?.on("connect_error", (err) => {
       if (err?.data?.status == 405) {
